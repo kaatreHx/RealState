@@ -1,0 +1,49 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Django specific
+*/migrations/
+!*/migrations/__init__.py
+
+# Media and static files
+/media/
+/static/
+
+# Database files
+db.sqlite3
+
+# Logs
+*.log
+
+# IDE specific
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Coverage reports
+coverage.xml
+*.cover
+
+# Python cache
+*.pyc
+__pycache__/
+
+# Local development settings
+local_settings.py
+
+# Django cache files
+*.cache
+*.pyo
+*.pyd
+
+# Generated files
+*.pyc
+*.pyo
+*.pyd
+
+# Environment files
+.env
+*.env
