@@ -2,48 +2,70 @@
 __pycache__/
 *.py[cod]
 *$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+.venv/
 
-# Django specific
-*/migrations/
-!*/migrations/__init__.py
-
-# Media and static files
-/media/
-/static/
-
-# Database files
-db.sqlite3
-
-# Logs
+# Django
 *.log
+local_settings.py
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
 
-# IDE specific
-.idea/
+# Database
+db.sqlite3
+*.db
+
+# Media and Static Files
+property/media/
+property/static/
+property/staticfiles/
+
+# IDE
 .vscode/
+.idea/
 *.swp
 *.swo
+.DS_Store
 
-# Coverage reports
-coverage.xml
-*.cover
+# Environment variables
+.env
+.env.local
+.env.*.local
 
-# Python cache
+# Build files
+build/
+dist/
+*.egg-info/
+
+# Test coverage
+htmlcov/
+.coverage
+.coverage.*
+.coverage.xml
+.nox/
+
+# Django migrations
+property/migrations/
+!property/migrations/__init__.py
+users/migrations/
+!users/migrations/__init__.py
+
+# Django static files
+static/
+media/
+
+# Django cache
 *.pyc
 __pycache__/
 
-# Local development settings
-local_settings.py
+# Django logs
+*.log
 
-# Django cache files
-*.cache
-*.pyo
-*.pyd
-
-# Generated files
-*.pyc
-*.pyo
-*.pyd
-
-# Environment files
-.env
-*.env
+# Django test coverage
+coverage.xml
