@@ -31,6 +31,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'channels',
+    'daphne',
     'rest_framework',
     'rest_framework_simplejwt',
     'django.contrib.admin',
@@ -41,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'users',
     'property',
+    'chat',
     'django_filters',
 ]
 
@@ -59,6 +62,15 @@ REST_FRAMEWORK = {
         'user': '100/hour',   
     },
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
+}
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    },
 }
 
 from datetime import timedelta
@@ -100,7 +112,8 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'realstate.wsgi.application'
+# WSGI_APPLICATION = 'realstate.wsgi.application'
+ASGI_APPLICATION = 'realstate.asgi.application'
 
 
 # Database
