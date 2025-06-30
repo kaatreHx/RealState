@@ -52,18 +52,13 @@ class RegisterSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Passwords do not match.")
         return data
 
-    def create(self, validated_data):
-        user = get_user_model()(
-            email=validated_data['email'],
-            phone=validated_data['phone'],
-            is_owner=validated_data['is_owner'],
-        )
-        user.set_password(validated_data['password'])
-        user.save()
-        return user
-
 class UserRatingSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserRating
         fields = ['id', 'user', 'rating', 'created_at', 'updated_at']
+
+class LoginSerializer(serializers.Serializer):
+    id = serializers.CharField()
+    password = serializers.CharField()
+    
 

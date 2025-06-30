@@ -1,19 +1,29 @@
-from rest_framework import generics
+from rest_framework.views import APIView
 from rest_framework import viewsets
 from rest_framework import status
 from .models import UserRating
-from .serializers import RegisterSerializer, UserRatingSerializer
+from .serializers import RegisterSerializer, UserRatingSerializer, LoginSerializer
 from rest_framework.throttling import AnonRateThrottle
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import get_user_model
 
-class RegisterView(generics.CreateAPIView):
+class RegisterView(APIView):
     throttle_classes = [AnonRateThrottle]
     serializer_class = RegisterSerializer
 
-class LoginView(generics.CreateAPIView):
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class LoginView(APIView):
     throttle_classes = [AnonRateThrottle]
+    serializer_class = LoginSerializer
+    
     def post(self, request):
         id = request.data.get('id')
         password = request.data.get('password')
