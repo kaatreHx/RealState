@@ -1,12 +1,14 @@
 from rest_framework.views import APIView
 from rest_framework import viewsets
 from rest_framework import status
-from .models import UserRating
-from .serializers import RegisterSerializer, UserRatingSerializer, LoginSerializer
+from .models import UserRating, CustomUser
+from .serializers import RegisterSerializer, UserRatingSerializer, LoginSerializer, CustomUserSerializer
 from rest_framework.throttling import AnonRateThrottle
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import get_user_model
+from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticated
 
 class RegisterView(APIView):
     throttle_classes = [AnonRateThrottle]
@@ -58,6 +60,13 @@ class LoginView(APIView):
                 'updated_at': user.updated_at,
             }
         }, status=status.HTTP_200_OK)
+
+class UserViewSet(viewsets.ModelViewSet):
+    throttle_classes = [AnonRateThrottle]
+    permission_classes = [IsAuthenticated]
+    queryset = CustomUser.objects.all()
+    http_method_names = ['get', 'put', 'delete']
+    serializer_class = CustomUserSerializer
 
 class UserRatingViewSet(viewsets.ModelViewSet):
     throttle_classes = [AnonRateThrottle]
