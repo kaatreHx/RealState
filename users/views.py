@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import get_user_model
 from rest_framework import viewsets
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 
 class RegisterView(APIView):
     throttle_classes = [AnonRateThrottle]
@@ -63,12 +63,21 @@ class LoginView(APIView):
 
 class UserViewSet(viewsets.ModelViewSet):
     throttle_classes = [AnonRateThrottle]
-    permission_classes = [IsAuthenticated]
     queryset = CustomUser.objects.all()
     http_method_names = ['get', 'put', 'delete']
     serializer_class = CustomUserSerializer
+    
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            return [AllowAny()]
+        return [IsAuthenticated()]
 
 class UserRatingViewSet(viewsets.ModelViewSet):
     throttle_classes = [AnonRateThrottle]
     queryset = UserRating.objects.all()
     serializer_class = UserRatingSerializer
+    
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            return [AllowAny()]
+        return [IsAuthenticated()]
