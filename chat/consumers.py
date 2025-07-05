@@ -6,16 +6,42 @@ from channels.db import database_sync_to_async
 
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
-        self.room_name = self.scope['url_route']['kwargs']['room_name'].split('_')
-        self.user1 = int(self.room_name[0])
-        self.user2 = int(self.room_name[1])
+        try:
+            # Get the token from query parameters
+            token = self.scope['query_string'].decode('utf-8').split('=')[1]
             
-        # Only allow one of the two users in the room
-        if self.scope["user"].id not in [self.user1, self.user2]:
+            # Authenticate user using the token
+            from rest_framework_simplejwt.tokens import AccessToken
+            access_token = AccessToken(token)
+            user_id = access_token.payload['user_id']
+            
+            # Verify token is valid
+            access_token.verify()
+            
+            # Get the room name parts
+            parts = self.scope['url_route']['kwargs']['room_name'].split('_')
+            self.user1 = int(parts[0])
+            self.user2 = int(parts[1])
+            
+            # For constant room name (set before authentication check)
+            self.room_name = f"chat_{min(self.user1, self.user2)}_{max(self.user1, self.user2)}"
+            
+            # Only allow one of the two users in the room
+            if user_id not in [self.user1, self.user2]:
+                await self.close()
+                return
+            
+            # Accept the connection
+            await self.accept()
+            
+            # Join room group
+            await self.channel_layer.group_add(
+                self.room_name,
+                self.channel_name
+            )
+        except Exception as e:
+            print(f"Authentication error: {e}")
             await self.close()
-
-        #For constant room name
-        self.room_name = f"chat_{min(self.user1, self.user2)}_{max(self.user1, self.user2)}"
 
         # Join room 
         await self.channel_layer.group_add(

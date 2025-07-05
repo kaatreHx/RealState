@@ -146,20 +146,36 @@
 
         async function fetchUsers() {
             try {
+                console.log('Fetching users from:', 'http://localhost:8000/api/users/users-data/');
                 const response = await fetch('http://localhost:8000/api/users/users-data/');
-                const users = await response.json();
+                console.log('Response status:', response.status);
+                
+                if (!response.ok) {
+                    console.error('API response error:', response.statusText);
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                console.log('Raw API response:', data);
+                
+                // Handle paginated response
+                const users = data.results || [];
+                console.log('Processed users:', users);
                 
                 userList.innerHTML = '';
                 
                 users.forEach(user => {
                     if (user.id !== userId) {
+                        console.log('Adding user:', user.email);
                         const userItem = document.createElement('div');
                         userItem.className = 'user-item';
-                        userItem.textContent = user.username || user.email;
+                        
+                        // Show email if username is not available
+                        userItem.textContent = user.email;
                         userItem.dataset.userId = user.id;
                         
                         // Add click handler
-                        userItem.addEventListener('click', () => selectUser(user.id, user.username || user.email));
+                        userItem.addEventListener('click', () => selectUser(user.id, user.email));
                         
                         userList.appendChild(userItem);
                     }
@@ -184,7 +200,11 @@
         // Connect to WebSocket for chat
         function connectToChat() {
             if (selectedUserId) {
-                const socket = new WebSocket(`ws://localhost:8000/ws/chat/${userId}-${selectedUserId}/`);
+                // Get JWT token from localStorage
+                const token = localStorage.getItem('access_token');
+                
+                // Create WebSocket URL with token
+                const socket = new WebSocket(`ws://localhost:8000/ws/chat/${userId}-${selectedUserId}/?token=${token}`);
                 
                 socket.onmessage = async function(event) {
                     try {
