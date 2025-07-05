@@ -19,7 +19,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             access_token.verify()
             
             # Get the room name parts
-            parts = self.scope['url_route']['kwargs']['room_name'].split('_')
+            parts = self.scope['url_route']['kwargs']['room_name'].split('-')
             self.user1 = int(parts[0])
             self.user2 = int(parts[1])
             
@@ -43,20 +43,17 @@ class ChatConsumer(AsyncWebsocketConsumer):
             print(f"Authentication error: {e}")
             await self.close()
 
-        # Join room 
-        await self.channel_layer.group_add(
-            self.room_name,
-            self.channel_name
-        )
+
 
         await self.accept()
 
     async def disconnect(self, close_code):
-        # Leave room 
-        await self.channel_layer.group_discard(
-            self.room_name,
-            self.channel_name
-        )   
+        # Only leave room if room_name was set
+        if hasattr(self, 'room_name'):
+            await self.channel_layer.group_discard(
+                self.room_name,
+                self.channel_name
+            )   
 
     # Receive message from WebSocket
     async def receive(self, text_data):

@@ -202,9 +202,13 @@
             if (selectedUserId) {
                 // Get JWT token from localStorage
                 const token = localStorage.getItem('access_token');
+                const userlog = localStorage.getItem('user');
+                const userId = JSON.parse(userlog).id
+                const roomName = `${userId}-${selectedUserId}`;
+                console.log(roomName)
                 
                 // Create WebSocket URL with token
-                const socket = new WebSocket(`ws://localhost:8000/ws/chat/${userId}-${selectedUserId}/?token=${token}`);
+                const socket = new WebSocket(`ws://localhost:8000/ws/chat/${roomName}/?token=${token}`);
                 
                 socket.onmessage = async function(event) {
                     try {
