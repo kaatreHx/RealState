@@ -9,9 +9,8 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import get_user_model
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from rest_framework.views import GenericAPIView
-from rest_framework_simplejwt.views import TokenObtainPairView
-import requests
+from rest_framework.generics import GenericAPIView
+from google.auth.transport.requests import Request
 from google.oauth2 import id_token
 
 class RegisterView(APIView):
@@ -38,7 +37,7 @@ class GoogleLoginView(GenericAPIView):
             return Response({"error": "Token is required"}, status=status.HTTP_400_BAD_REQUEST)
         
         try:
-            userinfo = id_token.verify_oauth2_token(token, requests.Request())
+            userinfo = id_token.verify_oauth2_token(token, Request())
 
             username = userinfo.get("name")
             email = userinfo.get("email")
