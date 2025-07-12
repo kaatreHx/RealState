@@ -2,14 +2,13 @@ from rest_framework import serializers
 from .models import CustomUser, CustomerVerification
 from django.contrib.auth import get_user_model
 from .models import UserRating
-import re
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError as DjangoValidationError
 
 class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ['id', 'email', 'phone', 'is_owner', 'is_staff', 'is_active', 'is_online', 'created_at', 'updated_at']
+        fields = ['id', 'email', 'username', 'is_owner', 'is_staff', 'is_active', 'is_online', 'created_at', 'updated_at']
 
 class CustomerVerificationSerializer(serializers.ModelSerializer):
     class Meta:
@@ -21,7 +20,7 @@ class RegisterSerializer(serializers.ModelSerializer):
     confirm_password = serializers.CharField(write_only=True)
     class Meta:
         model = CustomUser
-        fields = ['email', 'phone', 'is_owner', 'password', 'confirm_password']
+        fields = ['email', 'username', 'is_owner', 'password', 'confirm_password']
 
     def validate_email(self, value):
         # Format validation
@@ -36,14 +35,11 @@ class RegisterSerializer(serializers.ModelSerializer):
 
         return value
     
-    def validate_phone(self, value):
-        # Format: simple regex for 10-15 digit phone numbers
-        if not re.match(r'^\+?\d{10,15}$', value):
-            raise serializers.ValidationError("Enter a valid phone number (10-15 digits).")
+    def validate_username(self, value):
 
         # Uniqueness check
-        if get_user_model().objects.filter(phone=value).exists():
-            raise serializers.ValidationError("Phone number is already in use.")
+        if get_user_model().objects.filter(username=value).exists():
+            raise serializers.ValidationError("Username is already in use.")
 
         return value
 
