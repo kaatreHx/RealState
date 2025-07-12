@@ -60,5 +60,8 @@ class UserRatingSerializer(serializers.ModelSerializer):
 class LoginSerializer(serializers.Serializer):
     id = serializers.CharField()
     password = serializers.CharField()
+
+class GoogleLoginSerializer(serializers.Serializer):
+    id_token = serializers.CharField()
     
 
