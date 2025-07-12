@@ -47,7 +47,7 @@ class GoogleLoginView(GenericAPIView):
             if user: 
                 return Response({"message": "User already exists"}, status=status.HTTP_400_BAD_REQUEST)
             else:
-                user = CustomUser.objects.create_user(email=email, phone=username)
+                user = CustomUser.objects.create_user(email=email, username=username)
                 refresh = RefreshToken.for_user(user)
                 return Response({
                     "message": "User created successfully",
@@ -74,7 +74,7 @@ class LoginView(APIView):
         
         user = get_user_model().objects.filter(email=id).first()
         if not user:
-            user = get_user_model().objects.filter(phone=id).first()
+            user = get_user_model().objects.filter(username=id).first()
         
         if not user or not user.check_password(password):
             return Response({
@@ -88,7 +88,7 @@ class LoginView(APIView):
             'user': {
                 'id': user.id,
                 'email': user.email,
-                'phone': user.phone,
+                'username': user.username,
                 'is_owner': user.is_owner,
                 'is_staff': user.is_staff,
                 'is_active': user.is_active,
