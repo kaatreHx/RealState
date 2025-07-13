@@ -12,6 +12,10 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.generics import GenericAPIView
 from google.auth.transport.requests import Request
 from google.oauth2 import id_token
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.token_blacklist.models import BlacklistedToken, OutstandingToken
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import action
 
 class RegisterView(APIView):
     throttle_classes = [AnonRateThrottle]
@@ -68,7 +72,7 @@ class LoginView(APIView):
 
         if not id or not password:
             return Response({
-                'error': 'Both id and password are required'
+                'error': 'Both Id and Password are required'
             }, status=status.HTTP_400_BAD_REQUEST)
         
         user = get_user_model().objects.filter(email=id).first()
@@ -107,6 +111,19 @@ class UserViewSet(viewsets.ModelViewSet):
         if self.request.method == 'GET':
             return [AllowAny()]
         return [IsAuthenticated()]
+
+class LogoutViewSet(viewsets.ViewSet):
+    permission_classes = [IsAuthenticated]
+
+    @action(methods=['post'], detail=False)
+    def create(self, request):
+        try:
+            refresh_token = request.data["refresh"]
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+            return Response({"detail": "Logout successful. Token blacklisted."}, status=status.HTTP_205_RESET_CONTENT)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 class UserRatingViewSet(viewsets.ModelViewSet):
     throttle_classes = [AnonRateThrottle]
