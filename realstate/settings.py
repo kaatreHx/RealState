@@ -74,6 +74,8 @@ INSTALLED_APPS = [
     'property',
     'chat',
     'django_filters',
+    'image_gallery',
+    'booking'
 ]
 
 REST_FRAMEWORK = {
