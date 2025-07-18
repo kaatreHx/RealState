@@ -26,6 +26,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_online = models.BooleanField(default=False)
+    is_verified = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -69,13 +70,11 @@ class CustomerVerification(models.Model):
     document_number = models.CharField(max_length=100, unique=True)
     document_front = models.ImageField(upload_to=user_kyc_document_path, blank=True, null=True)
     document_back = models.ImageField(upload_to=user_kyc_document_path, blank=True, null=True)
-
-    is_verified = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.user.first_name} {self.user.last_name}"
+        return f"{self.first_name} {self.last_name}"
 
 class UserRating(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
