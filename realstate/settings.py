@@ -75,7 +75,8 @@ INSTALLED_APPS = [
     'chat',
     'django_filters',
     'image_gallery',
-    'booking'
+    'booking',
+    'drf_yasg',
 ]
 
 REST_FRAMEWORK = {
@@ -112,6 +113,17 @@ SIMPLE_JWT = {
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
     'AUTH_HEADER_TYPES': ('Bearer',),
+}
+
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header',
+            'description': 'Enter token as: **Bearer &lt;your_token&gt;**',
+        }
+    },
 }
 
 AUTH_USER_MODEL = 'users.CustomUser'
