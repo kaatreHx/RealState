@@ -1,4 +1,4 @@
-from rest_framework.views import APIView
+from rest_framework.generics import GenericAPIView
 from rest_framework import viewsets
 from rest_framework import status
 from .models import UserRating, CustomUser
@@ -13,11 +13,10 @@ from rest_framework.generics import GenericAPIView
 from google.auth.transport.requests import Request
 from google.oauth2 import id_token
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework_simplejwt.token_blacklist.models import BlacklistedToken, OutstandingToken
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
 
-class RegisterView(APIView):
+class RegisterView(GenericAPIView):
     throttle_classes = [AnonRateThrottle]
     serializer_class = RegisterSerializer
 
@@ -62,7 +61,7 @@ class GoogleLoginView(GenericAPIView):
             return Response({"error": f"Invalid token: {e}"}, status=status.HTTP_400_BAD_REQUEST)
     
 
-class LoginView(APIView):
+class LoginView(GenericAPIView):
     throttle_classes = [AnonRateThrottle]
     serializer_class = LoginSerializer
     
