@@ -8,12 +8,12 @@ from django.core.exceptions import ValidationError as DjangoValidationError
 class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ['id', 'email', 'username', 'is_owner', 'is_staff', 'is_active', 'is_online', 'created_at', 'updated_at']
+        fields = "__all__"
 
 class CustomerVerificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomerVerification
-        fields = ['id', 'user', 'first_name', 'last_name', 'dob', 'gender', 'profile_image', 'address', 'city', 'country', 'postal_code', 'document_type', 'document_number', 'document_front', 'document_back', 'is_verified', 'created_at', 'updated_at']
+        fields = "__all__"
 
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
