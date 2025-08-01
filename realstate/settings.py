@@ -77,6 +77,7 @@ INSTALLED_APPS = [
     'image_gallery',
     'booking',
     'drf_yasg',
+    'django_celery_results',
 ]
 
 REST_FRAMEWORK = {
@@ -201,6 +202,19 @@ USE_I18N = True
 
 USE_TZ = True
 
+#Celery Configuration
+CELERY_TIMEZONE = "Asia/Kathmandu"
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'django-db' # To store result in database
+CELERY_RESULT_EXTENDED = True # Show info like taskname, args, kwargs, status, etc
+
+#SMTP Configuration
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'xyz@gmail.com'
+EMAIL_HOST_PASSWORD = 'Your gmail app password'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
